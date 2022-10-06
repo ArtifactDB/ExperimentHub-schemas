@@ -3,9 +3,11 @@
         { "$ref": "../../original/raw/_common/v1.json" },
         {
             "if": {
-                "properties": {
-                    "is_child": {
-                        "const": true
+                "not": {
+                    "properties": {
+                        "is_child": {
+                            "const": true
+                        }
                     }
                 }
             },
