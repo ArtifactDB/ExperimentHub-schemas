@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "genomic_ranges_list/v1.json",
+    "type": "object",
+    "title": "Genomic Ranges List",
+    "description": "A compressed list of genomic ranges, used to represent groups of genomic ranges, e.g., all exons for each gene. The concatenated object (pointed at by the `concatenated` property) should be a genomic ranges object, as defined by the `genomic_ranges` schema.", 
+    "allOf": [
+        { "$ref": "../compressed_list/v1.json" }
+    ],
+    "required": [ 
+        "genomic_ranges_list" 
+    ],
+    "properties": {
+        "genomic_ranges_list": {
+            "type":"object",
+            "required": [
+                "concatenated"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "concatenated": {
+                    "type": "object",
+                    "description": "Pointer to the genomic ranges object, created by concatenating the ranges across all groups in the genomic ranges list.",
+                    "properties": {
+                        "resource": {
+                            "_children":{
+                                "contains": ["genomic_ranges"]
+                            }
+                        }
+                    },
+                    "allOf": [ { "$ref": "../_resource/v1.json" } ]
+                }
+            }
+        }
+    },
+    "_attributes": {
+        "format": "text/csv",
+        "restore": {
+            "R": "alabaster.ranges::loadGRangesList"
+        }
+    }
+}
+

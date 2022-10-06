@@ -1,0 +1,122 @@
+{
+    "additionalProperties": false,
+    "allOf": [ 
+        { "$ref": "../../original/raw/_common/v1.json" },
+        {
+            "if": {
+                "properties": {
+                    "is_child": {
+                        "const": true
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "authors",
+                    "organism",
+                    "origin"
+                ]
+            }
+        }
+    ],
+    "properties": {
+        "authors": {
+            "type": "array",
+            "description": "Names of the authors of this resource.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "organism": {
+            "type": "array",
+            "description": "NCBI taxonomy IDs of the species involved in this resource.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "origin": {
+            "type": "array",
+            "description": "Origins of this resource.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "source": {
+                        "type" :"string",
+                        "description": "Source database or repository.",
+                        "enum": [ "PubMed", "GEO", "ArrayExpress", "doi" ]
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "Identifier for the resource in the specified `type`."
+                    }
+                },
+                "allOf": [ 
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "PubMed"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^[0-9]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "GEO"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^GSE[0-9]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "ArrayExpress"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^E-MTAB-[0-9]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "doi"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^[0-9a-zA-Z\\._-]+/[0-9a-zA-Z\\._-]+$"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
