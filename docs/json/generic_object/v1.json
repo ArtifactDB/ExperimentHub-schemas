@@ -1,0 +1,185 @@
+{
+    "$id": "generic_object/v1.json",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "_attributes": {
+        "restore": {
+            "R": "base::readRDS"
+        }
+    },
+    "additionalProperties": false,
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "is_child": {
+                        "const": true
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "authors",
+                    "organism",
+                    "origin"
+                ]
+            }
+        }
+    ],
+    "description": "A serialized object of some format, as a schema of last resort for saving language-specific objects. For R, this should be an RDS file (_not RDA_) containing a single arbitrary R object. For Python, this should be a pickle file.",
+    "properties": {
+        "$schema": {
+            "description": "The schema to use.",
+            "type": "string"
+        },
+        "authors": {
+            "description": "Names of the authors of this resource.",
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "generic_object": {
+            "additionalProperties": false,
+            "properties": {
+                "class": {
+                    "description": "The class of the object.",
+                    "examples": [
+                        "DFrame",
+                        "GRanges"
+                    ],
+                    "type": "string"
+                },
+                "language": {
+                    "description": "The language in which the object can be used.",
+                    "enum": [
+                        "R",
+                        "Python"
+                    ],
+                    "type": "string"
+                }
+            },
+            "required": [
+                "class",
+                "language"
+            ],
+            "type": "object"
+        },
+        "is_child": {
+            "default": false,
+            "description": "Is this a child document, only to be interpreted in the context of the parent document from which it is linked? This may have implications for search and metadata requirements.",
+            "type": "boolean"
+        },
+        "md5sum": {
+            "description": "MD5 checksum for the file.",
+            "type": "string"
+        },
+        "organism": {
+            "description": "NCBI taxonomy IDs of the species involved in this resource.",
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "origin": {
+            "description": "Origins of this resource.",
+            "items": {
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "PubMed"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^[0-9]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "GEO"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^GSE[0-9]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "ArrayExpress"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^E-MTAB-[0-9]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "doi"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^[0-9a-zA-Z\\._-]+/[0-9a-zA-Z\\._-]+$"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identifier for the resource in the specified `type`.",
+                        "type": "string"
+                    },
+                    "source": {
+                        "description": "Source database or repository.",
+                        "enum": [
+                            "PubMed",
+                            "GEO",
+                            "ArrayExpress",
+                            "doi"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "type": "array"
+        },
+        "path": {
+            "description": "Path to the file in the project directory.",
+            "type": "string"
+        }
+    },
+    "required": [
+        "$schema",
+        "generic_object",
+        "md5sum",
+        "path"
+    ],
+    "title": "Generic Object",
+    "type": "object"
+}
