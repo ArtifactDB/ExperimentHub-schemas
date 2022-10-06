@@ -19,9 +19,13 @@
             },
             "then": {
                 "required": [
-                    "authors",
-                    "organism",
-                    "origin"
+                    "title",
+                    "description",
+                    "maintainers",
+                    "species",
+                    "genome",
+                    "origin",
+                    "bioc_version"
                 ]
             }
         }
@@ -32,12 +36,10 @@
             "description": "The schema to use.",
             "type": "string"
         },
-        "authors": {
-            "description": "Names of the authors of this resource.",
-            "items": {
-                "type": "string"
-            },
-            "type": "array"
+        "bioc_version": {
+            "description": "Version of Bioconductor used to generate this resource.",
+            "pattern": "^[0-9]+\\.[0-9]+$",
+            "type": "string"
         },
         "data_frame_factor": {
             "additionalProperties": false,
@@ -81,6 +83,10 @@
                 "levels"
             ],
             "type": "object"
+        },
+        "description": {
+            "description": "Description of the resource.",
+            "type": "string"
         },
         "factor": {
             "additionalProperties": false,
@@ -178,21 +184,63 @@
             ],
             "type": "object"
         },
+        "genome": {
+            "description": "UCSC, Ensembl or other genome builds involved in generating this resource.",
+            "items": {
+                "properties": {
+                    "id": {
+                        "description": "Identifier for this genome build.",
+                        "examples": [
+                            "mm10",
+                            "NCBIm37"
+                        ],
+                        "type": "string"
+                    },
+                    "source": {
+                        "description": "Source of the genome build identifier.",
+                        "enum": [
+                            "Ensembl",
+                            "UCSC",
+                            "Wormbase",
+                            "Flybase"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "source"
+                ],
+                "type": "object"
+            },
+            "type": "array"
+        },
         "is_child": {
             "default": false,
             "description": "Is this a child document, only to be interpreted in the context of the parent document from which it is linked? This may have implications for search and metadata requirements.",
             "type": "boolean"
         },
+        "maintainers": {
+            "description": "Maintainers of this resource.",
+            "items": {
+                "properties": {
+                    "email": {
+                        "description": "Email of the maintainer.",
+                        "pattern": "^[^@]+@[^@]+$",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Name of the maintainer.",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "type": "array"
+        },
         "md5sum": {
             "description": "MD5 checksum for the file.",
             "type": "string"
-        },
-        "organism": {
-            "description": "NCBI taxonomy IDs of the species involved in this resource.",
-            "items": {
-                "type": "string"
-            },
-            "type": "array"
         },
         "origin": {
             "description": "Origins of this resource.",
@@ -250,7 +298,7 @@
                         "if": {
                             "properties": {
                                 "source": {
-                                    "const": "doi"
+                                    "const": "DOI"
                                 }
                             }
                         },
@@ -258,6 +306,22 @@
                             "properties": {
                                 "id": {
                                     "pattern": "^[0-9a-zA-Z\\._-]+/[0-9a-zA-Z\\._-]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "URI"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^(http|ftp|https|s3|sftp)://"
                                 }
                             }
                         }
@@ -274,7 +338,8 @@
                             "PubMed",
                             "GEO",
                             "ArrayExpress",
-                            "doi"
+                            "DOI",
+                            "URI"
                         ],
                         "type": "string"
                     }
@@ -285,6 +350,18 @@
         },
         "path": {
             "description": "Path to the file in the project directory.",
+            "type": "string"
+        },
+        "species": {
+            "description": "NCBI taxonomy IDs of the species involved in this resource.",
+            "items": {
+                "type": "integer"
+            },
+            "minimum": 1,
+            "type": "array"
+        },
+        "title": {
+            "description": "Title of the resource.",
             "type": "string"
         }
     },
