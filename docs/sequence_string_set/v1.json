@@ -11,9 +11,11 @@
     "allOf": [
         {
             "if": {
-                "properties": {
-                    "is_child": {
-                        "const": true
+                "not": {
+                    "properties": {
+                        "is_child": {
+                            "const": true
+                        }
                     }
                 }
             },
