@@ -1,5 +1,4 @@
 {
-    "additionalProperties": false,
     "allOf": [ 
         { "$ref": "../../original/raw/_common/v1.json" },
         {
@@ -12,28 +11,87 @@
             },
             "then": {
                 "required": [
-                    "authors",
-                    "organism",
-                    "origin"
+                    "title",
+                    "description",
+                    "maintainers",
+                    "species",
+                    "genome",
+                    "origin",
+                    "bioc_version"
                 ]
             }
         }
     ],
+
     "properties": {
-        "authors": {
+        "title": {
+            "type": "string",
+            "description": "Title of the resource."
+        },
+
+        "description": {
+            "type": "string",
+            "description": "Description of the resource."
+        },
+
+        "maintainers": {
             "type": "array",
-            "description": "Names of the authors of this resource.",
+            "description": "Maintainers of this resource.",
             "items": {
-                "type": "string"
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the maintainer."
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email of the maintainer.",
+                        "pattern": "^[^@]+@[^@]+$"
+                    }
+                }
             }
         },
-        "organism": {
+
+        "species": {
             "type": "array",
             "description": "NCBI taxonomy IDs of the species involved in this resource.",
             "items": {
-                "type": "string"
+                "type": "integer"
+            },
+            "minimum": 1
+        },
+
+        "genome": {
+            "type": "array",
+            "description": "UCSC, Ensembl or other genome builds involved in generating this resource.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Identifier for this genome build.",
+                        "examples": [ "mm10", "NCBIm37" ]
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "Source of the genome build identifier.",
+                        "enum": [ "Ensembl", "UCSC", "Wormbase", "Flybase" ]
+                    }
+                },
+                "required": [
+                    "id",
+                    "source"
+                ]
             }
         },
+
+        "bioc_version": {
+            "type": "string",
+            "description": "Version of Bioconductor used to generate this resource.",
+            "pattern": "^[0-9]+\\.[0-9]+$"
+        },
+
         "origin": {
             "type": "array",
             "description": "Origins of this resource.",
@@ -43,7 +101,7 @@
                     "source": {
                         "type" :"string",
                         "description": "Source database or repository.",
-                        "enum": [ "PubMed", "GEO", "ArrayExpress", "doi" ]
+                        "enum": [ "PubMed", "GEO", "ArrayExpress", "DOI", "URI" ]
                     },
                     "id": {
                         "type": "string",
@@ -67,6 +125,7 @@
                             }
                         }
                     },
+
                     {
                         "if": {
                             "properties": {
@@ -83,6 +142,7 @@
                             }
                         }
                     },
+
                     {
                         "if": {
                             "properties": {
@@ -99,11 +159,12 @@
                             }
                         }
                     },
+
                     {
                         "if": {
                             "properties": {
                                 "source": {
-                                    "const": "doi"
+                                    "const": "DOI"
                                 }
                             }
                         },
@@ -111,6 +172,23 @@
                             "properties": {
                                 "id": {
                                     "pattern": "^[0-9a-zA-Z\\._-]+/[0-9a-zA-Z\\._-]+$"
+                                }
+                            }
+                        }
+                    },
+
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "URI"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^(http|ftp|https|s3|sftp)://"
                                 }
                             }
                         }
