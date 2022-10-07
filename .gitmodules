@@ -1,3 +1,6 @@
 [submodule "original"]
 	path = original
 	url = https://github.com/ArtifactDB/BiocObjectSchemas
+[submodule "BiocObjectSchemas"]
+	path = original
+	url = https://github.com/ArtifactDB/BiocObjectSchemas
