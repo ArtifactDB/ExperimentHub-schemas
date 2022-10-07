@@ -1,0 +1,350 @@
+{
+    "$id": "sequence_string_set/v1.json",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "_attributes": {
+        "metadata_only": true,
+        "restore": {
+            "R": "alabaster.string::loadXStringSet"
+        }
+    },
+    "additionalProperties": false,
+    "allOf": [
+        {
+            "if": {
+                "not": {
+                    "properties": {
+                        "is_child": {
+                            "const": true
+                        }
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "title",
+                    "description",
+                    "maintainers",
+                    "species",
+                    "genome",
+                    "origin",
+                    "bioc_version"
+                ]
+            }
+        }
+    ],
+    "description": "Sequences for DNA, RNA or protein molecules, plus some extra annotations. This corresponds to a `XStringSet` object from the [**Biostrings**](https://bioconductor.org/packages/Biostrings) Bioconductor package. If the sequences are associated with quality scores, this corresponds instead to a `QualityScaledXStringSet` object.",
+    "properties": {
+        "$schema": {
+            "description": "The schema to use.",
+            "type": "string"
+        },
+        "bioc_version": {
+            "description": "Version of Bioconductor used to generate this resource.",
+            "pattern": "^[0-9]+\\.[0-9]+$",
+            "type": "string"
+        },
+        "description": {
+            "description": "Description of the resource.",
+            "type": "string"
+        },
+        "genome": {
+            "description": "UCSC, Ensembl or other genome builds involved in generating this resource.",
+            "items": {
+                "properties": {
+                    "id": {
+                        "description": "Identifier for this genome build.",
+                        "examples": [
+                            "mm10",
+                            "NCBIm37"
+                        ],
+                        "type": "string"
+                    },
+                    "source": {
+                        "description": "Source of the genome build identifier.",
+                        "enum": [
+                            "Ensembl",
+                            "UCSC",
+                            "Wormbase",
+                            "Flybase"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "source"
+                ],
+                "type": "object"
+            },
+            "type": "array"
+        },
+        "is_child": {
+            "default": false,
+            "description": "Is this a child document, only to be interpreted in the context of the parent document from which it is linked? This may have implications for search and metadata requirements.",
+            "type": "boolean"
+        },
+        "maintainers": {
+            "description": "Maintainers of this resource.",
+            "items": {
+                "properties": {
+                    "email": {
+                        "description": "Email of the maintainer.",
+                        "pattern": "^[^@]+@[^@]+$",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Name of the maintainer.",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "type": "array"
+        },
+        "origin": {
+            "description": "Origins of this resource.",
+            "items": {
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "PubMed"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^[0-9]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "GEO"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^GSE[0-9]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "ArrayExpress"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^E-MTAB-[0-9]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "DOI"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^[0-9a-zA-Z\\._-]+/[0-9a-zA-Z\\._-]+$"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": {
+                                "source": {
+                                    "const": "URI"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "id": {
+                                    "pattern": "^(http|ftp|https|s3|sftp)://"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identifier for the resource in the specified `type`.",
+                        "type": "string"
+                    },
+                    "source": {
+                        "description": "Source database or repository.",
+                        "enum": [
+                            "PubMed",
+                            "GEO",
+                            "ArrayExpress",
+                            "DOI",
+                            "URI"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "type": "array"
+        },
+        "path": {
+            "description": "Path to the file in the project directory.",
+            "type": "string"
+        },
+        "sequence_string_set": {
+            "additionalProperties": false,
+            "properties": {
+                "names": {
+                    "default": false,
+                    "description": "Whether the sequences were named. If `false`, placeholder names are created in the sequence file at `sequence_file`; these should be ignored for further processing.",
+                    "type": "boolean"
+                },
+                "other_data": {
+                    "description": "A list containing additional annotations for the object. Omitted if no annotations are present.",
+                    "properties": {
+                        "resource": {
+                            "_children": {
+                                "contains": [
+                                    "basic_list"
+                                ]
+                            },
+                            "properties": {
+                                "path": {
+                                    "description": "Relative path of the resource from the root of the project directory.",
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "description": "Type of file. Local files should be present in the same project directory.",
+                                    "enum": [
+                                        "local"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "type",
+                                "path"
+                            ],
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "resource"
+                    ],
+                    "type": "object"
+                },
+                "sequence_data": {
+                    "description": "A data frame containing additional annotations for each sequence. Each row corresponds to a sequence in the FASTA/FASTQ file. Omitted if no annotations are present.",
+                    "properties": {
+                        "resource": {
+                            "_children": {
+                                "contains": [
+                                    "data_frame"
+                                ]
+                            },
+                            "properties": {
+                                "path": {
+                                    "description": "Relative path of the resource from the root of the project directory.",
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "description": "Type of file. Local files should be present in the same project directory.",
+                                    "enum": [
+                                        "local"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "type",
+                                "path"
+                            ],
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "resource"
+                    ],
+                    "type": "object"
+                },
+                "sequence_file": {
+                    "description": "Biological sequences in FASTA or FASTQ format. The nature of the sequence is described in the sequence file's own metadata.",
+                    "properties": {
+                        "resource": {
+                            "_children": {
+                                "contains": [
+                                    "sequence_file"
+                                ]
+                            },
+                            "properties": {
+                                "path": {
+                                    "description": "Relative path of the resource from the root of the project directory.",
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "description": "Type of file. Local files should be present in the same project directory.",
+                                    "enum": [
+                                        "local"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "type",
+                                "path"
+                            ],
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "resource"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "sequence_file"
+            ],
+            "type": "object"
+        },
+        "species": {
+            "description": "NCBI taxonomy IDs of the species involved in this resource.",
+            "items": {
+                "type": "integer"
+            },
+            "minimum": 1,
+            "type": "array"
+        },
+        "title": {
+            "description": "Title of the resource.",
+            "type": "string"
+        }
+    },
+    "required": [
+        "$schema",
+        "path",
+        "sequence_string_set"
+    ],
+    "title": "Sequence string set",
+    "type": "object"
+}
