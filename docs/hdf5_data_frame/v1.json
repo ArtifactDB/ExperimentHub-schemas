@@ -347,7 +347,8 @@
                         "then": {
                             "properties": {
                                 "id": {
-                                    "pattern": "^[0-9]+$"
+                                    "pattern": "^[0-9]+$",
+                                    "type": "string"
                                 }
                             }
                         }
@@ -363,7 +364,8 @@
                         "then": {
                             "properties": {
                                 "id": {
-                                    "pattern": "^GSE[0-9]+$"
+                                    "pattern": "^GSE[0-9]+$",
+                                    "type": "string"
                                 }
                             }
                         }
@@ -379,7 +381,8 @@
                         "then": {
                             "properties": {
                                 "id": {
-                                    "pattern": "^E-MTAB-[0-9]+$"
+                                    "pattern": "^E-MTAB-[0-9]+$",
+                                    "type": "string"
                                 }
                             }
                         }
@@ -395,7 +398,8 @@
                         "then": {
                             "properties": {
                                 "id": {
-                                    "pattern": "^[0-9a-zA-Z\\._-]+/[0-9a-zA-Z\\._-]+$"
+                                    "pattern": "^[0-9a-zA-Z\\._-]+/[0-9a-zA-Z\\._-]+$",
+                                    "type": "string"
                                 }
                             }
                         }
@@ -411,7 +415,8 @@
                         "then": {
                             "properties": {
                                 "id": {
-                                    "pattern": "^(http|ftp|https|s3|sftp)://"
+                                    "pattern": "^(http|ftp|https|s3|sftp)://",
+                                    "type": "string"
                                 }
                             }
                         }
@@ -445,9 +450,9 @@
         "species": {
             "description": "NCBI taxonomy IDs of the species involved in this resource.",
             "items": {
+                "minimum": 1,
                 "type": "integer"
             },
-            "minimum": 1,
             "type": "array"
         },
         "title": {
