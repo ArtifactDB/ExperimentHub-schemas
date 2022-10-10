@@ -8,3 +8,4 @@ See the [Pages site](https://artifactdb.github.io/ExperimentHub-schemas) for all
 Check the [Releases page](https://github.com/ArtifactDB/ExperimentHub-schemas/releases) for versioned releases of the resolved schemas.
 
 For developers: we have followed the [instructions here](https://github.com/ArtifactDB/BiocObjectSchemas) for customizing the Bioconductor schemas.
+Most changes relate to the introduction of ExperimentHub metadata requirements to the [common subschema](raw/_common/v1.json).
