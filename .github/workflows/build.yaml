@@ -12,11 +12,21 @@ jobs:
       with:
         submodules: true
 
-    - name: Build schemas
-      uses: ArtifactDB/build-schemas-action@v0.2.0
+    - name: Resolve schemas
+      uses: ArtifactDB/build-schemas-action@master
       with:
-        docs: public
-        title: 'Calcite demonstration schemas'
+        do_validate: false
+        do_prettify: false
+
+    - name: Apply more calcite customizations
+      run: sudo ./customize.sh resolved
+
+    - name: Validate and prettify schemas 
+      uses: ArtifactDB/build-schemas-action@master
+      with:
+        do_resolve: false
+        path_docs: public
+        docs_title: 'Calcite demonstration schemas'
 
     - name: Publish to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@4.1.3

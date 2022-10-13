@@ -8,4 +8,8 @@ See the [Pages site](https://artifactdb.github.io/ExperimentHub-schemas) for all
 Check the [Releases page](https://github.com/ArtifactDB/ExperimentHub-schemas/releases) for versioned releases of the resolved schemas.
 
 For developers: we have followed the [instructions here](https://github.com/ArtifactDB/BiocObjectSchemas) for customizing the Bioconductor schemas.
-Most changes relate to the introduction of ExperimentHub metadata requirements to the [common subschema](raw/_common/v1.json).
+Changes include:
+
+- Introduction of ExperimentHub metadata requirements to the [common subschema](raw/_common/v1.json).
+- Add a [script](customize.sh) to switch the array restoration command to use the [calcite R package](https://github.com/ArtifactDb/calcite-R).
+- Added an extra step in the [workflow](.github/workflows/build.yaml) to run the aforementioned script.
